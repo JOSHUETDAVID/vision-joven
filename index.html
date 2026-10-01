@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Visión Joven · Cartelera</title>
+<meta name="description" content="Escuela Laboratorio de Producción Audiovisual Visión Joven — Rodando historias del Caribe. Cortometrajes 2022–2024 realizados por jóvenes de Atlántico, Bolívar, Sucre y Córdoba.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f0d0b; --bg2:#17140f; --card:#1e1a14; --line:#2f291f;
+  --ink:#f3ece0; --muted:#a89d8a; --accent:#e0a64a; --accent2:#c2532f;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;line-height:1.6;overflow-x:hidden}
+a{color:inherit}
+img{display:block;max-width:100%}
+.wrap{max-width:1200px;margin:0 auto;padding:0 20px}
+h1,h2,h3,.display{font-family:Anton,Impact,sans-serif;font-weight:400;letter-spacing:.02em;text-transform:uppercase;line-height:1.05}
+.eyebrow{font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);font-weight:600}
+section{padding:96px 0}
+section h2{font-size:clamp(2.2rem,5vw,3.6rem);margin:.3em 0 .4em}
+.lead{color:var(--muted);max-width:680px;font-size:1.05rem}
+
+/* grain */
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:100;opacity:.07;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:50;transition:background .3s}
+nav.solid{background:rgba(15,13,11,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:68px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo svg{width:34px;height:34px}
+.logo span{font-family:Anton,sans-serif;font-size:1.25rem;letter-spacing:.06em;text-transform:uppercase}
+.links{display:flex;gap:28px;list-style:none}
+.links a{text-decoration:none;font-size:.88rem;color:var(--muted);font-weight:500}
+.links a:hover{color:var(--ink)}
+.burger{display:none;background:none;border:0;color:var(--ink);font-size:1.6rem;cursor:pointer}
+@media(max-width:860px){
+  .links{position:fixed;top:68px;left:0;right:0;flex-direction:column;gap:0;background:var(--bg);border-bottom:1px solid var(--line);display:none}
+  .links.open{display:flex}
+  .links a{display:block;padding:16px 20px;border-top:1px solid var(--line)}
+  .burger{display:block}
+}
+
+/* hero */
+.hero{min-height:100vh;display:flex;align-items:center;position:relative;padding:120px 0 80px;overflow:hidden}
+.hero-bg{position:absolute;inset:0;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;opacity:.28;filter:grayscale(1) sepia(.5)}
+.hero-bg img{width:100%;height:100%;object-fit:cover}
+.hero::before{content:"";position:absolute;inset:0;z-index:1;background:radial-gradient(ellipse at 30% 50%,rgba(15,13,11,.55),var(--bg) 75%),linear-gradient(to bottom,transparent 60%,var(--bg))}
+.hero .wrap{position:relative;z-index:2}
+.hero h1{font-size:clamp(2.8rem,8.5vw,7rem);margin:.2em 0 .15em}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero .sub{font-size:clamp(1rem,2vw,1.25rem);color:var(--muted);max-width:620px}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:32px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 24px;border-radius:999px;font-weight:600;text-decoration:none;font-size:.95rem;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer;transition:.2s}
+.btn.primary{background:var(--accent);color:#1a1207;border-color:var(--accent)}
+.btn:hover{transform:translateY(-2px)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin-top:64px;max-width:820px}
+.stats div{background:rgba(23,20,15,.85);padding:20px}
+.stats b{display:block;font-family:Anton,sans-serif;font-size:2.4rem;font-weight:400;color:var(--accent);line-height:1}
+.stats span{font-size:.8rem;color:var(--muted)}
+@media(max-width:640px){.stats{grid-template-columns:repeat(2,1fr)}}
+
+/* proceso */
+.proceso{background:var(--bg2)}
+.two{display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:center}
+@media(max-width:860px){.two{grid-template-columns:1fr;gap:32px}}
+.allies{display:grid;gap:12px;margin-top:28px}
+.ally{display:flex;gap:14px;align-items:flex-start;padding:16px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.ally i{font-style:normal;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);min-width:84px;padding-top:3px}
+.depts{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.dept{padding:22px;border-radius:var(--radius);background:var(--card);border:1px solid var(--line)}
+.dept b{font-family:Anton,sans-serif;font-weight:400;font-size:2.6rem;color:var(--accent);line-height:1}
+.dept h3{font-size:1.3rem;margin:6px 0 4px}
+.dept p{font-size:.8rem;color:var(--muted)}
+
+/* destacado */
+.feature{display:grid;grid-template-columns:1.4fr 1fr;gap:40px;align-items:center}
+@media(max-width:860px){.feature{grid-template-columns:1fr}}
+.player{position:relative;aspect-ratio:16/9;border-radius:var(--radius);overflow:hidden;cursor:pointer;background:#000;border:1px solid var(--line)}
+.player img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.player:hover img{transform:scale(1.04)}
+.play{position:absolute;inset:0;display:grid;place-items:center;background:linear-gradient(to top,rgba(0,0,0,.6),transparent 60%)}
+.play span{width:76px;height:76px;border-radius:50%;background:var(--accent);display:grid;place-items:center;box-shadow:0 0 0 10px rgba(224,166,74,.2)}
+.play svg{width:28px;margin-left:4px;fill:#1a1207}
+
+/* ejes */
+.ejes{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;margin-top:36px}
+.eje{position:relative;min-height:190px;border-radius:var(--radius);overflow:hidden;cursor:pointer;border:1px solid var(--line);text-align:left;background:var(--card);color:var(--ink);font:inherit}
+.eje img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(.6) brightness(.45);transition:.4s}
+.eje:hover img{filter:grayscale(0) brightness(.55);transform:scale(1.05)}
+.eje div{position:absolute;inset:auto 0 0 0;padding:20px}
+.eje h3{font-size:1.5rem}
+.eje small{color:var(--accent);font-weight:600;font-size:.8rem}
+
+/* cartelera */
+.cartelera{background:var(--bg2)}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:32px 0 12px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--muted);font:500 .82rem Inter,sans-serif;cursor:pointer;white-space:nowrap}
+.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:28px}
+select,input[type=search]{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:inherit;font-size:.88rem}
+input[type=search]{flex:1;min-width:200px}
+.count{color:var(--muted);font-size:.85rem;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
+.film{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:.25s;display:flex;flex-direction:column;text-align:left;color:inherit;font:inherit;padding:0}
+.film:hover{transform:translateY(-4px);border-color:var(--accent)}
+.thumb{position:relative;aspect-ratio:16/9;background:#000;overflow:hidden;width:100%}
+.thumb img{width:100%;height:100%;object-fit:cover;transition:.4s}
+.film:hover .thumb img{transform:scale(1.06)}
+.badge{position:absolute;top:10px;left:10px;font-size:.7rem;font-weight:700;padding:4px 9px;border-radius:999px;background:rgba(0,0,0,.7);letter-spacing:.05em;text-transform:uppercase}
+.badge.doc{color:var(--accent)}
+.dur{position:absolute;bottom:10px;right:10px;font-size:.75rem;padding:3px 7px;border-radius:6px;background:rgba(0,0,0,.75)}
+.film .body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:4px;flex:1}
+.film h3{font-size:1.35rem}
+.film .meta{font-size:.82rem;color:var(--muted)}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.tags span{font-size:.68rem;padding:3px 8px;border-radius:6px;background:rgba(224,166,74,.1);color:var(--accent)}
+.empty{padding:48px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:var(--radius)}
+
+/* realizadores */
+.people{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin-top:36px}
+.person{background:var(--bg);padding:18px 20px}
+.person b{display:block;font-weight:600}
+.person span{font-size:.8rem;color:var(--muted)}
+
+/* contacto */
+.contact{text-align:center}
+.contact .lead{margin:0 auto}
+.contact .cta{justify-content:center}
+
+footer{border-top:1px solid var(--line);padding:40px 0;color:var(--muted);font-size:.82rem}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+
+/* modal */
+.modal{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.88);display:none;align-items:center;justify-content:center;padding:20px}
+.modal.open{display:flex}
+.modal-box{width:100%;max-width:1000px;max-height:92vh;overflow:auto;background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius)}
+.modal-video{aspect-ratio:16/9;background:#000}
+.modal-video iframe{width:100%;height:100%;border:0;display:block}
+.modal-info{padding:24px 28px 28px;display:grid;grid-template-columns:1.2fr 1fr;gap:24px}
+@media(max-width:700px){.modal-info{grid-template-columns:1fr;padding:20px}}
+.modal-info h3{font-size:2rem}
+dl{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font-size:.88rem}
+dt{color:var(--muted)}
+.close{position:absolute;top:16px;right:20px;background:var(--ink);color:var(--bg);border:0;width:42px;height:42px;border-radius:50%;font-size:1.3rem;cursor:pointer}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="wrap">
+    <a href="#inicio" class="logo" aria-label="Visión Joven">
+      <svg viewBox="0 0 40 40" fill="none" stroke="#e0a64a" stroke-width="2.2"><circle cx="20" cy="20" r="17"/><circle cx="20" cy="20" r="3"/><circle cx="20" cy="10" r="4"/><circle cx="20" cy="30" r="4"/><circle cx="10" cy="20" r="4"/><circle cx="30" cy="20" r="4"/></svg>
+      <span>Visión Joven</span>
+    </a>
+    <button class="burger" id="burger" aria-label="Menú">☰</button>
+    <ul class="links" id="links">
+      <li><a href="#proceso">La escuela</a></li>
+      <li><a href="#ejes">Ejes temáticos</a></li>
+      <li><a href="#cartelera">Cartelera</a></li>
+      <li><a href="#realizadores">Realizadores</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero" id="inicio">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="wrap">
+    <p class="eyebrow">Escuela Laboratorio de Producción Audiovisual</p>
+    <h1>Rodando historias<br>del <em>Caribe</em></h1>
+    <p class="sub">Cortometrajes de ficción y documental hechos por jóvenes de Atlántico, Bolívar, Sucre y Córdoba. Cine comunitario, de bajo presupuesto y con mucho territorio.</p>
+    <div class="cta">
+      <a href="#cartelera" class="btn primary">Ver la cartelera →</a>
+      <a href="#destacado" class="btn">▶ Ver el documental del proceso</a>
+    </div>
+    <div class="stats" id="stats"></div>
+  </div>
+</header>
+
+<section class="proceso" id="proceso">
+  <div class="wrap two">
+    <div>
+      <p class="eyebrow">Descripción del proceso</p>
+      <h2>Jóvenes que aprenden y emprenden en lo audiovisual</h2>
+      <p class="lead">Los cortometrajes son el resultado del proceso formativo en cine comunitario y de bajo presupuesto con jóvenes de los departamentos de Atlántico, Bolívar, Sucre y Córdoba entre 2022 y 2024.</p>
+      <div class="allies">
+        <div class="ally"><i>Ejecuta</i><span>Corporación Taller Prodesal</span></div>
+        <div class="ally"><i>Ejecuta</i><span>Inter-American Foundation</span></div>
+        <div class="ally"><i>Apoya</i><span>Ministerio de las Culturas, las Artes y los Saberes</span></div>
+      </div>
+    </div>
+    <div class="depts" id="depts"></div>
+  </div>
+</section>
+
+<section id="destacado">
+  <div class="wrap feature">
+    <div class="player" data-id="RZnCgTdqISI" data-title="Jóvenes que aprenden y emprenden en lo audiovisual">
+      <img src="https://i.ytimg.com/vi/RZnCgTdqISI/hqdefault.jpg" alt="Documental Jóvenes que aprenden y emprenden en lo audiovisual" loading="lazy">
+      <div class="play"><span><svg viewBox="0 0 24 24"><path d="M5 3l16 9-16 9z"/></svg></span></div>
+    </div>
+    <div>
+      <p class="eyebrow">Documental · 12:02 min</p>
+      <h2>Detrás de cámara</h2>
+      <p class="lead">Un recorrido por la escuela: cómo jóvenes del Caribe colombiano pasaron de la idea al rodaje, y del rodaje a la pantalla.</p>
+    </div>
+  </div>
+</section>
+
+<section id="ejes">
+  <div class="wrap">
+    <p class="eyebrow">Ejes temáticos</p>
+    <h2>Siete miradas al territorio</h2>
+    <p class="lead">Cada corto nace de una pregunta sobre la región. Elige un eje para ver sus películas.</p>
+    <div class="ejes" id="ejesGrid"></div>
+  </div>
+</section>
+
+<section class="cartelera" id="cartelera">
+  <div class="wrap">
+    <p class="eyebrow">Cartelera 2022 – 2024</p>
+    <h2>Todas las películas</h2>
+    <div class="toolbar"><div class="chips" id="chips"></div></div>
+    <div class="filters">
+      <input type="search" id="q" placeholder="Buscar por título, director/a, productora o ciudad…">
+      <select id="fGenre"><option value="">Ficción y documental</option><option>Ficción</option><option>Documental</option></select>
+      <select id="fYear"><option value="">Todos los años</option><option>2022</option><option>2023</option><option>2024</option></select>
+      <select id="fDept"><option value="">Todos los departamentos</option><option>Atlántico</option><option>Bolívar</option><option>Córdoba</option><option>Sucre</option></select>
+    </div>
+    <p class="count" id="count"></p>
+    <div class="grid" id="grid"></div>
+  </div>
+</section>
+
+<section id="realizadores">
+  <div class="wrap">
+    <p class="eyebrow">Realizadores y colectivos</p>
+    <h2>Quiénes hacen el cine</h2>
+    <p class="lead">Directoras, directores y productoras jóvenes que hoy cuentan las historias de sus municipios.</p>
+    <div class="people" id="people"></div>
+  </div>
+</section>
+
+<section class="contact proceso" id="contacto">
+  <div class="wrap">
+    <p class="eyebrow">Contacto</p>
+    <h2>¿Quieres proyectar estas historias?</h2>
+    <p class="lead">Festivales, colegios, bibliotecas, cineclubes y organizaciones pueden programar la muestra completa o por ejes temáticos.</p>
+    <div class="cta">
+      <a href="mailto:correo@ejemplo.com" class="btn primary">Escríbenos</a>
+      <a href="#" class="btn">WhatsApp</a>
+      <a href="#" class="btn">Instagram</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Escuela Laboratorio de Producción Audiovisual Visión Joven · “Rodando historias del Caribe”</span>
+    <span>Corporación Taller Prodesal · Inter-American Foundation · MinCulturas</span>
+  </div>
+</footer>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true">
+  <button class="close" id="close" aria-label="Cerrar">✕</button>
+  <div class="modal-box">
+    <div class="modal-video" id="mVideo"></div>
+    <div class="modal-info" id="mInfo"></div>
+  </div>
+</div>
+
+<script>
+const EJES = {
+  memorias:{name:"Memorias del conflicto armado"},
+  resistencia:{name:"Resistencia de los pueblos"},
+  reclutamiento:{name:"Reclutamiento forzado"},
+  vbg:{name:"Violencias basadas en género"},
+  ambiental:{name:"Impacto ambiental"},
+  juventud:{name:"Juventud y territorio"},
+  etnico:{name:"Enfoque étnico"}
+};
+
+// Datos tomados de la cartelera 2022–2024. dur = null cuando la cartelera dice 00:00.
+const FILMS = [
+  {t:"Montes de María, historias de resiliencia",p:"ASOCAJOR",d:"Yennifer Mercado",c:"El Carmen de Bolívar",dep:"Bolívar",dur:"09:05",g:"Documental",y:2022,id:"NFkEIfuQMFQ",e:["memorias"]},
+  {t:"Hipertimesia",p:"Artista de Lumiere",d:"Elizabeth Gaviria",c:"Sincelejo",dep:"Sucre",dur:"10:09",g:"Ficción",y:2022,id:"dY6c26EO904",e:["memorias"]},
+  {t:"El canto del yacabó",p:"ALUATA",d:"Arturo Arroyave",c:"Montería",dep:"Córdoba",dur:"08:40",g:"Ficción",y:2022,id:"-TxGfBneKgA",e:["memorias"]},
+  {t:"La masacre del billar",p:"Influencers Étnicos",d:"Diego Casseres",c:"San Basilio de Palenque",dep:"Bolívar",dur:"14:34",g:"Documental",y:2023,id:"nC9eJqdyXrQ",e:["memorias","etnico"]},
+  {t:"Resultados",p:"Benposta Life",d:"Frank Cervantes",c:"Puerto Libertador",dep:"Córdoba",dur:"08:29",g:"Ficción",y:2022,id:"iD3nE4YrOzk",e:["memorias"]},
+  {t:"Sabores ancestrales afro",p:"ASOAFRO",d:"Yanivis Pardo González",c:"San Onofre",dep:"Sucre",dur:null,g:"Documental",y:2023,id:"uoQIhxqrQiI",e:["resistencia","etnico"]},
+  {t:"Gaita, instrumento de paz y resistencia",p:"Sonidos de las Chuanas",d:"Beronica Peluffo",c:"Ovejas",dep:"Sucre",dur:"11:19",g:"Documental",y:2022,id:"hvuJzG3Gi4w",e:["resistencia"]},
+  {t:"Camino forzado",p:"EPAC",d:"Jeremías Alviz",c:"Sincelejo",dep:"Sucre",dur:"10:50",g:"Ficción",y:2022,id:"XKataR0Vyw8",e:["reclutamiento","vbg"]},
+  {t:"Evencio",p:"Jóvenes Titanes",d:"Naralia González",c:"Puerto Libertador",dep:"Córdoba",dur:"08:35",g:"Ficción",y:2023,id:"cERiNbmbF8E",e:["reclutamiento"]},
+  {t:"Sofía",p:"Fuerza Joven 13 de Agosto",d:"Yashimin Adriana Alarcón",c:"Puerto Libertador",dep:"Córdoba",dur:"06:45",g:"Ficción",y:2023,id:"f2i3p8prFuQ",e:["vbg"]},
+  {t:"Secuelas",p:"Villa Audiovisual",d:"María Alejandra Álvarez",c:"Montería",dep:"Córdoba",dur:"05:49",g:"Ficción",y:2022,id:"w0De9dLLoxg",e:["vbg"]},
+  {t:"Moustro",p:"CONEX 23",d:"Lali Soler",c:"Cartagena",dep:"Bolívar",dur:"08:42",g:"Ficción",y:2023,id:"S81v2h9MEX8",e:["vbg"]},
+  {t:"Pintando mi libertad",p:"SEMYER",d:"Sara Lucía Ricardo",c:"Puerto Libertador",dep:"Córdoba",dur:null,g:"Ficción",y:2024,id:"rkUGU9rOuQ4",e:["vbg"]},
+  {t:"Mamá nunca salió",p:"Enfoque Diverso",d:"Jorge Escorcia",c:"Barranquilla",dep:"Atlántico",dur:null,g:"Ficción",y:2024,id:"warzXX5eBtU",e:["vbg"]},
+  {t:"Legado sinuano",p:"ARMA 2",d:"Luis Viera",c:"Montería",dep:"Córdoba",dur:"10:47",g:"Ficción",y:2024,id:"Z94dLFRhiu4",e:["ambiental"]},
+  {t:"A orillas de las aguas",p:"Jóvenes de Corazón Verde",d:"Nella Pizarro",c:"Barranquilla",dep:"Atlántico",dur:"09:08",g:"Ficción",y:2024,id:"lQ0R-R_d7yQ",e:["ambiental"]},
+  {t:"No basta con soñar",p:"Gama Films",d:"Gamaliel Romero",c:"Sincelejo",dep:"Sucre",dur:"09:46",g:"Ficción",y:2024,id:"LgS6i6JvWH0",e:["juventud"]},
+  {t:"¿Quiénes somos?",p:"Prisma Films",d:"Luisa Hernández",c:"Sincelejo",dep:"Sucre",dur:"14:08",g:"Ficción",y:2023,id:"hnR0ef55Nxg",e:["juventud"]},
+  {t:"Sueños de un pescador",p:"Colectivo de Comunicaciones Alas Libres de Tierrabomba",d:"Lilia Herrera Jiménez",c:"Tierrabomba",dep:"Bolívar",dur:null,g:"Ficción",y:2024,id:"LqxnZIW-_28",e:["etnico"]}
+];
+
+const thumb = id => `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+
+// hero collage
+$("#heroBg").innerHTML = FILMS.slice(0,8).map(f=>`<img src="${thumb(f.id)}" alt="" loading="lazy">`).join("");
+
+// stats
+const depts = {};
+FILMS.forEach(f => { (depts[f.dep] ||= new Set()).add(f.c); depts[f.dep].n = (depts[f.dep].n||0)+1; });
+$("#stats").innerHTML = [
+  [FILMS.length,"cortometrajes"],[Object.keys(depts).length,"departamentos"],
+  [Object.keys(EJES).length,"ejes temáticos"],["3","años de proceso"]
+].map(([n,l])=>`<div><b>${n}</b><span>${l}</span></div>`).join("");
+
+$("#depts").innerHTML = Object.keys(depts).sort().map(k=>`
+  <div class="dept"><b>${depts[k].n}</b><h3>${k}</h3><p>${[...depts[k]].join(" · ")}</p></div>`).join("");
+
+// ejes
+$("#ejesGrid").innerHTML = Object.entries(EJES).map(([k,v])=>{
+  const list = FILMS.filter(f=>f.e.includes(k));
+  return `<button class="eje" data-eje="${k}">
+    <img src="${thumb(list[0].id)}" alt="" loading="lazy">
+    <div><small>${list.length} ${list.length===1?"película":"películas"}</small><h3>${v.name}</h3></div>
+  </button>`;
+}).join("");
+
+// filtros
+let state = {eje:"", q:"", g:"", y:"", dep:""};
+$("#chips").innerHTML = `<button class="chip on" data-eje="">Todas</button>` +
+  Object.entries(EJES).map(([k,v])=>`<button class="chip" data-eje="${k}">${v.name}</button>`).join("");
+
+function render(){
+  const q = state.q.toLowerCase();
+  const list = FILMS.filter(f =>
+    (!state.eje || f.e.includes(state.eje)) &&
+    (!state.g || f.g===state.g) &&
+    (!state.y || String(f.y)===state.y) &&
+    (!state.dep || f.dep===state.dep) &&
+    (!q || [f.t,f.d,f.p,f.c,f.dep].join(" ").toLowerCase().includes(q)));
+  $("#count").textContent = `${list.length} de ${FILMS.length} películas`;
+  $("#grid").innerHTML = list.length ? list.map(f=>`
+    <button class="film" data-id="${f.id}">
+      <div class="thumb">
+        <img src="${thumb(f.id)}" alt="${esc(f.t)}" loading="lazy">
+        <span class="badge ${f.g==="Documental"?"doc":""}">${f.g}</span>
+        ${f.dur?`<span class="dur">${f.dur}</span>`:""}
+      </div>
+      <div class="body">
+        <h3>${esc(f.t)}</h3>
+        <span class="meta">Dir. ${esc(f.d)} · ${f.y}</span>
+        <span class="meta">${esc(f.c)}, ${f.dep}</span>
+        <div class="tags">${f.e.map(e=>`<span>${EJES[e].name}</span>`).join("")}</div>
+      </div>
+    </button>`).join("") : `<div class="empty">No hay películas con esos filtros.</div>`;
+  document.querySelectorAll(".chip").forEach(c=>c.classList.toggle("on", c.dataset.eje===state.eje));
+}
+render();
+
+document.addEventListener("click", e=>{
+  const chip = e.target.closest(".chip, .eje");
+  if (chip){ state.eje = chip.dataset.eje; render(); if (chip.classList.contains("eje")) $("#cartelera").scrollIntoView(); return; }
+  const film = e.target.closest(".film");
+  if (film){ openFilm(FILMS.find(f=>f.id===film.dataset.id)); return; }
+  const pl = e.target.closest(".player");
+  if (pl){ openFilm({t:pl.dataset.title,id:pl.dataset.id,g:"Documental",dur:"12:02",d:"Escuela Visión Joven",p:"Corporación Taller Prodesal",c:"Caribe colombiano",dep:"",y:"2022–2024",e:[]}); }
+});
+$("#q").addEventListener("input", e=>{state.q=e.target.value; render();});
+$("#fGenre").addEventListener("change", e=>{state.g=e.target.value; render();});
+$("#fYear").addEventListener("change", e=>{state.y=e.target.value; render();});
+$("#fDept").addEventListener("change", e=>{state.dep=e.target.value; render();});
+
+// modal
+function openFilm(f){
+  $("#mVideo").innerHTML = `<iframe src="https://www.youtube.com/embed/${f.id}?autoplay=1&rel=0" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen title="${esc(f.t)}"></iframe>`;
+  $("#mInfo").innerHTML = `
+    <div>
+      <p class="eyebrow">${f.g}${f.e.length?" · "+f.e.map(e=>EJES[e].name).join(" · "):""}</p>
+      <h3>${esc(f.t)}</h3>
+      <p style="margin-top:12px"><a href="https://youtu.be/${f.id}" target="_blank" rel="noopener" style="color:var(--accent)">Ver en YouTube ↗</a></p>
+    </div>
+    <dl>
+      <dt>Dirección</dt><dd>${esc(f.d)}</dd>
+      <dt>Productora</dt><dd>${esc(f.p)}</dd>
+      <dt>Lugar</dt><dd>${esc(f.c)}${f.dep?", "+f.dep:""}</dd>
+      <dt>Año</dt><dd>${f.y}</dd>
+      ${f.dur?`<dt>Duración</dt><dd>${f.dur} min</dd>`:""}
+    </dl>`;
+  $("#modal").classList.add("open");
+  document.body.style.overflow="hidden";
+}
+function closeModal(){ $("#modal").classList.remove("open"); $("#mVideo").innerHTML=""; document.body.style.overflow=""; }
+$("#close").onclick = closeModal;
+$("#modal").addEventListener("click", e=>{ if(e.target.id==="modal") closeModal(); });
+document.addEventListener("keydown", e=>{ if(e.key==="Escape") closeModal(); });
+
+// realizadores
+$("#people").innerHTML = FILMS.map(f=>`<div class="person"><b>${esc(f.d)}</b><span>${esc(f.t)} · ${esc(f.p)}</span></div>`).join("");
+
+// nav
+const nav = $("#nav");
+addEventListener("scroll", ()=>nav.classList.toggle("solid", scrollY>40));
+$("#burger").onclick = ()=>$("#links").classList.toggle("open");
+document.querySelectorAll(".links a").forEach(a=>a.onclick=()=>$("#links").classList.remove("open"));
+</script>
+</body>
+</html>
