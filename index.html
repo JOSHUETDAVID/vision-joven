@@ -197,11 +197,18 @@ footer{background:var(--ink);color:var(--on-ink-muted);padding-block:36px;font:4
 footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 
 /* modal */
-.modal{position:fixed;inset:0;z-index:200;background:rgba(20,18,16,.92);display:none;align-items:center;justify-content:center;padding:16px}
-.modal.open{display:flex}
-.mbox{position:relative;width:100%;max-width:980px;max-height:92vh;overflow:auto;background:var(--paper);color:var(--ink);border-radius:2px}
-.mvid{position:relative;aspect-ratio:16/9;max-width:100%;background:#000}
+/* modo sala: <dialog> nativo a pantalla completa; el área fuera de .mbox cierra al tocar */
+.modal{--ambient:#a8341c;position:fixed;inset:0;width:100%;height:100%;max-width:none;max-height:none;margin:0;border:0;padding:16px;background:transparent;color:inherit;overflow:auto}
+.modal[open]{display:flex;align-items:center;justify-content:center}
+.modal::backdrop{background:radial-gradient(ellipse 70% 55% at 50% 42%,color-mix(in srgb,var(--ambient) 38%,transparent),transparent 70%),rgba(8,7,6,.95)}
+.mbox{position:relative;width:100%;max-width:980px;max-height:92vh;overflow:auto;background:var(--paper);color:var(--ink);border-radius:2px;margin:auto}
+.mvid{position:relative;aspect-ratio:16/9;max-width:100%;background:#000;view-transition-name:none;box-shadow:0 0 80px -10px color-mix(in srgb,var(--ambient) 70%,transparent)}
 .mvid img{width:100%;height:100%;object-fit:cover}
+.mvid .playdot{border:0;background:none;cursor:pointer;padding:0}
+/* transición de cine: el fotograma de la tarjeta crece hasta ser la pantalla */
+::view-transition-group(film){animation-duration:.6s;animation-timing-function:cubic-bezier(.2,.8,.2,1)}
+::view-transition-old(film),::view-transition-new(film){height:100%;object-fit:cover}
+::view-transition-old(root),::view-transition-new(root){animation-duration:.35s}
 .mvid iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .minfo{display:grid;grid-template-columns:1.2fr 1fr;gap:28px;padding:26px 28px 30px}
 @media(max-width:700px){.minfo{grid-template-columns:1fr;padding:20px}}
@@ -357,13 +364,13 @@ dd{font-weight:600}
   </div>
 </footer>
 
-<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+<dialog class="modal" id="modal" aria-labelledby="mTitle">
   <div class="mbox" id="mbox">
     <button class="close" id="close" aria-label="Cerrar">✕</button>
     <div class="mvid" id="mVideo"></div>
     <div class="minfo" id="mInfo"></div>
   </div>
-</div>
+</dialog>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
 <script>
@@ -455,13 +462,33 @@ function render(){
 }
 render();
 
-/* ---------- modal ---------- */
-let lastFocus = null;
-function openFilm(f){
-  lastFocus = document.activeElement;
-  $("#mVideo").innerHTML = EMBED
-    ? `<iframe src="https://www.youtube.com/embed/${f.id}?autoplay=1&rel=0" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen title="${esc(f.t)}"></iframe>`
-    : `<img src="${still(f)}" alt="Fotograma de ${esc(f.t)}">`;
+/* ---------- modo sala (dialog + view transition) ---------- */
+const dlg = $("#modal");
+const VT = !REDUCED && typeof document.startViewTransition === "function";
+let lastFocus = null, srcImg = null, current = null, closing = false;
+
+// Color promedio del fotograma para el resplandor ambiental (como el modo ambiente de YouTube)
+const ambientCache = {};
+function ambientOf(f){
+  if (ambientCache[f.img]) return Promise.resolve(ambientCache[f.img]);
+  return new Promise(res=>{
+    const im = new Image(); im.src = still(f);
+    im.onload = ()=>{ try{
+        const c = document.createElement("canvas"); c.width = c.height = 1;
+        const x = c.getContext("2d"); x.drawImage(im,0,0,1,1);
+        const [r,g,b] = x.getImageData(0,0,1,1).data;
+        res(ambientCache[f.img] = `rgb(${r},${g},${b})`);
+      }catch(_){ res(null); } };
+    im.onerror = ()=>res(null);
+  });
+}
+function playerHTML(f){
+  return `<iframe src="https://www.youtube.com/embed/${f.id}?autoplay=1&rel=0" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen title="${esc(f.t)}"></iframe>`;
+}
+function fillFilm(f){
+  // Siempre arranca con el fotograma: es lo que "vuela" desde la tarjeta. El video entra después.
+  $("#mVideo").innerHTML = `<img src="${still(f)}" alt="Fotograma de ${esc(f.t)}">` +
+    (EMBED ? `<button class="playdot" id="mPlay" aria-label="Reproducir ${esc(f.t)}"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4l15 8-15 8z"/></svg></span></button>` : "");
   $("#mInfo").innerHTML = `
     <div><p class="label">${f.g}${f.e.length?" · "+f.e.map(e=>EJES[e]).join(" · "):""}</p>
       <h3 id="mTitle">${esc(f.t)}</h3>
@@ -469,26 +496,69 @@ function openFilm(f){
     <dl><dt>Dirección</dt><dd>${esc(f.d)}</dd><dt>Productora</dt><dd>${esc(f.p)}</dd>
       <dt>Lugar</dt><dd>${esc(f.c)}${f.dep?", "+f.dep:""}</dd><dt>Año</dt><dd>${f.y}</dd>
       ${f.dur?`<dt>Duración</dt><dd>${f.dur} min</dd>`:""}</dl>`;
-  $("#modal").classList.add("open"); document.body.style.overflow="hidden";
-  if (A){ A({targets:"#modal",opacity:[0,1],duration:260,easing:"linear"});
-          A({targets:"#mbox",scale:[.94,1],translateY:[24,0],opacity:[0,1],duration:620,easing:"easeOutExpo"});
-          A({targets:"#mInfo > *",opacity:[0,1],translateY:[10,0],delay:A.stagger(80,{start:180}),duration:500,easing:"easeOutQuad"}); }
+}
+function startPlayer(){ if (EMBED && current) $("#mVideo").innerHTML = playerHTML(current); }
+
+async function openFilm(f, img){
+  if (dlg.open) return;
+  lastFocus = document.activeElement; current = f; srcImg = img || null;
+  const amb = await ambientOf(f); if (amb) dlg.style.setProperty("--ambient", amb);
+  fillFilm(f);
+  const show = ()=>{
+    if (srcImg) srcImg.style.viewTransitionName = "";   // un solo elemento con el nombre a la vez
+    $("#mVideo").style.viewTransitionName = "film";
+    dlg.showModal(); document.body.style.overflow = "hidden";
+  };
+  if (VT && srcImg){
+    srcImg.style.viewTransitionName = "film";
+    const t = document.startViewTransition(show);
+    t.finished.finally(()=>{ $("#mVideo").style.viewTransitionName = ""; startPlayer(); });
+  } else {
+    show();
+    if (A) A({targets:"#mbox",scale:[.94,1],translateY:[24,0],opacity:[0,1],duration:620,easing:"easeOutExpo",complete:startPlayer});
+    else startPlayer();
+  }
+  if (A) A({targets:"#mInfo > *",opacity:[0,1],translateY:[10,0],delay:A.stagger(80,{start:220}),duration:500,easing:"easeOutQuad"});
   $("#close").focus();
 }
+function cleanup(){
+  $("#mVideo").innerHTML = ""; $("#mVideo").style.viewTransitionName = "";
+  if (srcImg) srcImg.style.viewTransitionName = "";
+  document.body.style.overflow = ""; current = null; closing = false;
+  lastFocus && lastFocus.focus();
+}
 function closeModal(){
-  const done = ()=>{ $("#modal").classList.remove("open"); $("#mVideo").innerHTML=""; document.body.style.overflow=""; lastFocus && lastFocus.focus(); };
-  if (A) A({targets:"#mbox",scale:.97,opacity:0,duration:200,easing:"easeInQuad",complete:done}); else done();
+  if (!dlg.open || closing) return;
+  closing = true;
+  // Si la tarjeta de origen sigue visible, el fotograma "vuelve" a ella
+  const back = VT && srcImg && srcImg.isConnected && srcImg.getBoundingClientRect().height > 0;
+  if (back){
+    $("#mVideo").innerHTML = `<img src="${still(current)}" alt="">`;   // el iframe no se puede capturar bien
+    $("#mVideo").style.viewTransitionName = "film";
+    const t = document.startViewTransition(()=>{
+      $("#mVideo").style.viewTransitionName = ""; srcImg.style.viewTransitionName = "film"; dlg.close();
+    });
+    t.finished.finally(cleanup);
+  } else if (A){
+    A({targets:"#mbox",scale:.97,opacity:0,duration:200,easing:"easeInQuad",complete:()=>{ dlg.close(); $("#mbox").style.opacity=""; $("#mbox").style.transform=""; cleanup(); }});
+  } else { dlg.close(); cleanup(); }
 }
 $("#close").onclick = closeModal;
-$("#modal").addEventListener("click", e=>{ if(e.target.id==="modal") closeModal(); });
-document.addEventListener("keydown", e=>{ if(e.key==="Escape" && $("#modal").classList.contains("open")) closeModal(); });
+$("#mVideo").addEventListener("click", e=>{ if (e.target.closest("#mPlay")) startPlayer(); });
+// Escape pasa por cancel: lo interceptamos para animar el cierre
+dlg.addEventListener("cancel", e=>{ e.preventDefault(); closeModal(); });
+// El dialog ocupa toda la pantalla (para el modo sala), así que "tocar afuera" = tocar fuera de la caja
+dlg.addEventListener("click", e=>{ if (!$("#mbox").contains(e.target)) closeModal(); });
+// Por si el diálogo se cierra por otra vía sin pasar por closeModal
+dlg.addEventListener("close", ()=>{ if (current && !closing) cleanup(); });
 
 document.addEventListener("click", e=>{
   const chip = e.target.closest(".chip, .eje");
   if (chip){ state.eje = chip.dataset.eje; render(); if (chip.classList.contains("eje")) $("#cartelera").scrollIntoView({behavior: REDUCED?"auto":"smooth"}); return; }
   const film = e.target.closest(".film");
-  if (film){ openFilm(FILMS.find(f=>f.id===film.dataset.id)); return; }
-  if (e.target.closest("#featScreen")) openFilm(FEATURE);
+  if (film){ openFilm(FILMS.find(f=>f.id===film.dataset.id), film.querySelector(".frame img")); return; }
+  const feat = e.target.closest("#featScreen");
+  if (feat) openFilm(FEATURE, feat.querySelector("img"));
 });
 $("#q").addEventListener("input", e=>{state.q=e.target.value; render();});
 $("#fGenre").addEventListener("change", e=>{state.g=e.target.value; render();});
