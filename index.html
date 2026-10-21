@@ -279,6 +279,31 @@ dd{font-weight:600}
 }
 .swipe{display:none;color:var(--red-ink)}
 
+/* ===== Optimización celular (la mayoría de visitas) ===== */
+.p-short{display:none}
+.more{display:none}
+@media(max-width:600px){
+  .proposal{font-size:.66rem;padding:7px 14px}
+  .p-long{display:none}.p-short{display:inline}
+  /* rollo pequeño en la esquina, fuera del texto */
+  .reel{width:44px;top:12px;right:16px;opacity:.6!important}
+  .hero .label{font-size:.66rem;letter-spacing:.05em;padding-right:44px}
+  .hero h1{font-size:clamp(2.5rem,12.5vw,3.6rem);margin:14px 0 18px}
+  .cta .btn{flex:1 1 100%;justify-content:center}
+  /* ejes: chips en una sola fila deslizable */
+  .chips{flex-wrap:nowrap;overflow-x:auto;margin:26px -20px 14px;padding:0 20px 4px;scrollbar-width:none;scroll-snap-type:x proximity;scroll-padding-inline:20px}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{flex:none;min-height:44px;scroll-snap-align:start}
+  .filters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .field.grow{grid-column:1/-1}
+  .field label{letter-spacing:.04em}
+  select{padding:0 8px;font-size:.88rem}
+  .eje{min-height:150px}
+  /* realizadores: 6 visibles y botón para el resto */
+  .credits:not(.all) .credit:nth-child(n+7){display:none}
+  .more{display:flex;width:100%;justify-content:center;margin-top:18px}
+  .contact .btn{width:100%;justify-content:center}
+}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}.film>*{scale:1!important;opacity:1!important}.kb img:first-child{opacity:1}}
 </style>
 </head>
@@ -300,7 +325,7 @@ dd{font-weight:600}
   el.addEventListener("click",function(){ clearTimeout(t); end(); },{once:true});
 })();
 </script>
-<div class="proposal">Propuesta de sitio web para la Escuela Visión Joven · prototipo, no es el sitio oficial</div>
+<div class="proposal"><span class="p-long">Propuesta de sitio web para la Escuela Visión Joven · prototipo, no es el sitio oficial</span><span class="p-short">Propuesta de sitio web · prototipo no oficial</span></div>
 
 <nav id="nav" aria-label="Principal">
   <div class="wrap">
@@ -416,6 +441,7 @@ dd{font-weight:600}
     <h2>Quiénes hacen el cine</h2>
     <p class="lead">Directoras, directores y colectivos jóvenes que hoy cuentan las historias de sus municipios.</p>
     <div class="credits" id="people"></div>
+    <button class="btn more" id="more" aria-controls="people" aria-expanded="false">Ver los realizadores</button>
   </div>
 </section>
 
@@ -513,6 +539,10 @@ $("#ejesGrid").innerHTML = Object.entries(EJES).map(([k,name])=>{
 }).join("");
 
 $("#people").innerHTML = FILMS.map(f=>`<div class="credit reveal"><b>${esc(f.d)}</b><span>${esc(f.t)} · ${esc(f.p)}</span></div>`).join("");
+$("#more").textContent = `Ver los ${FILMS.length} realizadores`;
+$("#more").onclick = ()=>{ const all = $("#people").classList.toggle("all");
+  $("#more").setAttribute("aria-expanded", all); $("#more").textContent = all ? "Ver menos" : `Ver los ${FILMS.length} realizadores`;
+  if (!all) $("#realizadores").scrollIntoView({behavior: REDUCED?"auto":"smooth"}); };
 
 /* ---------- filtros ---------- */
 const state = {eje:"", q:"", g:"", y:"", dep:""};
